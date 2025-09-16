@@ -2,33 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Dot Survival Game</title>
+  <title>Polka Dot Game by John McCombs</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: #111;
+      background: white;
     }
     canvas {
       display: block;
+    }
+    #titleScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      font-size: 36px;
+      font-weight: bold;
+      color: black;
+      z-index: 100;
+      cursor: pointer;
     }
     #ui {
       position: absolute;
       top: 10px;
       left: 10px;
-      color: white;
+      color: black;
       font-family: sans-serif;
       z-index: 10;
     }
     #leaderboard {
       margin-top: 10px;
     }
+    #resetBtn {
+      margin-top: 10px;
+      padding: 6px 12px;
+      background: #444;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #resetBtn:hover {
+      background: #666;
+    }
   </style>
 </head>
 <body>
-  <div id="ui">
+  <div id="titleScreen">Polka Dot Game by John McCombs<br><span style="font-size:18px;">Click to Start</span></div>
+  <div id="ui" style="display:none;">
     <div id="score">Score: 0</div>
+    <button id="resetBtn">Reset Game</button>
     <div id="leaderboard">
       <strong>Leaderboard:</strong>
       <ol id="scores"></ol>
@@ -46,34 +77,56 @@
     let alive = true;
     const scoreDisplay = document.getElementById('score');
     const leaderboardList = document.getElementById('scores');
+    const resetBtn = document.getElementById('resetBtn');
+    const titleScreen = document.getElementById('titleScreen');
+    const ui = document.getElementById('ui');
 
-    const player = {
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      radius: 20,
-      color: 'cyan'
-    };
+    let player;
+    let dots = [];
 
-    const dots = [];
+    function initGame() {
+      score = 0;
+      alive = true;
+      player = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        radius: 15,
+        color: 'black'
+      };
+      dots = [];
+      for (let i = 0; i < 80; i++) spawnDot();
+      scoreDisplay.textContent = `Score: ${score}`;
+    }
 
     function spawnDot() {
       const radius = 5 + Math.random() * 30;
+      const speed = 1.5 + Math.random() * 2;
+      const angle = Math.random() * Math.PI * 2;
       const dot = {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         radius,
         color: `hsl(${Math.random() * 360}, 70%, 60%)`,
-        dx: (Math.random() - 0.5) * 2,
-        dy: (Math.random() - 0.5) * 2
+        dx: Math.cos(angle) * speed,
+        dy: Math.sin(angle) * speed
       };
       dots.push(dot);
     }
 
-    for (let i = 0; i < 50; i++) spawnDot();
-
     canvas.addEventListener('mousemove', (e) => {
       player.x = e.clientX;
       player.y = e.clientY;
+    });
+
+    resetBtn.addEventListener('click', () => {
+      initGame();
+    });
+
+    titleScreen.addEventListener('click', () => {
+      titleScreen.style.display = 'none';
+      ui.style.display = 'block';
+      initGame();
+      gameLoop();
     });
 
     function drawCircle(x, y, radius, color) {
@@ -96,7 +149,6 @@
         dot.x += dot.dx;
         dot.y += dot.dy;
 
-        // Bounce off walls
         if (dot.x < dot.radius || dot.x > canvas.width - dot.radius) dot.dx *= -1;
         if (dot.y < dot.radius || dot.y > canvas.height - dot.radius) dot.dy *= -1;
 
@@ -118,14 +170,14 @@
     function endGame() {
       saveScore(score);
       alert("💀 You were eaten by a bigger dot!\nFinal Score: " + score);
-      location.reload();
+      initGame();
     }
 
     function saveScore(newScore) {
       let scores = JSON.parse(localStorage.getItem("dotScores")) || [];
       scores.push(newScore);
       scores.sort((a, b) => b - a);
-      scores = scores.slice(0, 5); // Top 5
+      scores = scores.slice(0, 5);
       localStorage.setItem("dotScores", JSON.stringify(scores));
       renderLeaderboard(scores);
     }
@@ -151,7 +203,6 @@
     }
 
     renderLeaderboard(JSON.parse(localStorage.getItem("dotScores")) || []);
-    gameLoop();
   </script>
 </body>
 </html>
