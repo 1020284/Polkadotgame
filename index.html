@@ -29,6 +29,7 @@
       color: black;
       z-index: 100;
       cursor: pointer;
+      flex-direction: column;
     }
     #ui {
       position: absolute;
@@ -37,6 +38,7 @@
       color: black;
       font-family: sans-serif;
       z-index: 10;
+      display: none;
     }
     #leaderboard {
       margin-top: 10px;
@@ -56,8 +58,12 @@
   </style>
 </head>
 <body>
-  <div id="titleScreen">Polka Dot Game by John McCombs<br><span style="font-size:18px;">Click to Start</span></div>
-  <div id="ui" style="display:none;">
+  <div id="titleScreen">
+    Polka Dot Game by John McCombs<br>
+    <span style="font-size:18px;">Click to Start</span>
+  </div>
+
+  <div id="ui">
     <div id="score">Score: 0</div>
     <button id="resetBtn">Reset Game</button>
     <div id="leaderboard">
@@ -65,6 +71,7 @@
       <ol id="scores"></ol>
     </div>
   </div>
+
   <canvas id="gameCanvas"></canvas>
 
   <script>
