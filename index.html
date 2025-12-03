@@ -1,38 +1,57 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gams</title>
-  <script>
-    window.onload = function() {
-      // Open a new about:blank tab
-      const newWin = window.open("about:blank", "_blank");
+  <title>Launch Sites</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    footer {
+      margin-top: 50px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Open Sites</h1>
+  <button onclick="openEmbedded('https://snkeindi.fpr.net')">V1</button>
+  <button onclick="openEmbedded('https://67.really9.com/')">V2</button>
+  <button onclick="openEmbedded('https://deltamath.interdoge.cfd.cdn.cloudflare.net/')">V3</button>
 
-      // Write the iframe into the new tab
-      newWin.document.write(`
+  <footer>
+    made possible By john
+  </footer>
+
+  <script>
+    function openEmbedded(url) {
+      const newTab = window.open('about:blank', '_blank');
+      newTab.document.write(`
         <!DOCTYPE html>
-        <html lang="en">
+        <html>
         <head>
           <meta charset="UTF-8">
-          <title>johns project</title>
           <style>
-            body, html { margin:0; padding:0; height:100%; overflow:hidden; }
+            html, body { margin:0; padding:0; height:100%; }
             iframe { border:none; width:100%; height:100%; }
           </style>
         </head>
         <body>
-          <iframe src="https://login.vincenzodimaro.it/" title="gams"></iframe>
+          <iframe src="${url}" frameborder="0"></iframe>
         </body>
         </html>
       `);
-      newWin.document.close();
-
-      // Redirect the original tab to Google Classroom
-      window.location.href = "https://classroom.google.com";
-    };
+      newTab.document.close();
+    }
   </script>
-</head>
-<body>
 </body>
 </html>
